@@ -1,2 +1,2 @@
-Day 1 Notes
+# Day 1 Notes
 
