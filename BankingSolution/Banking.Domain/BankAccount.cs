@@ -6,7 +6,7 @@
         public virtual void Deposit(decimal amountToDeposit)
         {
             // decimal bonusToAdd = _bonusCalculator.CalculateBonusFor(_balance, amountToDeposit);
-            _balance += amountToDeposit + bonusToAdd;
+            _balance += amountToDeposit; // + bonusToAdd;
         }
 
         public decimal GetBalance()
