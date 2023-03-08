@@ -1,3 +1,7 @@
-﻿namespace Status;
+﻿
+namespace Status;
 
-public record class StatusMessage(Guid Id, string currentMessage, DateTimeOffset When);
+// "Models"
+public  record StatusMessage(Guid Id, string Message, DateTimeOffset When);
+
+public record StatusChangeRequest(string Message);
