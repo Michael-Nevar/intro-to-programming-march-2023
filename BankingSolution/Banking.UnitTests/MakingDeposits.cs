@@ -1,26 +1,27 @@
 ﻿
+
 using Banking.Domain;
-using System.Diagnostics.CodeAnalysis;
+using Banking.UnitTests.TestDoubles;
+using Xunit;
 
-namespace Banking.UnitTests
+namespace Banking.UnitTests;
+
+public class MakingDeposits
 {
-    public class MakingDeposits
+    [Theory]
+    [InlineData(100)]
+    [InlineData(1.25)]
+    public void DepositsIncreasesTheBalance(decimal amountToDeposit)
     {
-        [Theory]
-        [InlineData(100)]
-        [InlineData(1.25)]
-        public void DepositsIncreasesTheBalance(decimal amountToDeposit)
-        {
-            //given
-            var account = new BankAccount();
-            var openingBalancee = account.GetBalance(); // Query (Func)
+        // given
+        var account = new BankAccount(new DummyBonusCalculator());
+        var openingBalance = account.GetBalance(); // Query (Func)
+        
+        // when
+        account.Deposit(amountToDeposit); // Command (Action)
 
-            //when
-            account.Deposit(amountToDeposit); // Command (Action)
-
-            // then
-            Assert.Equal(openingBalancee + amountToDeposit,
-                account.GetBalance());
-        }
+        // then
+        Assert.Equal(openingBalance + amountToDeposit , 
+            account.GetBalance());
     }
 }

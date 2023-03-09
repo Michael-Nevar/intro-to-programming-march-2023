@@ -1,8 +1,6 @@
 ﻿
-namespace Banking.Domain
-{
-    public class OverdraftException : ArgumentOutOfRangeException
-    {
+namespace Banking.Domain;
 
-    }
+public class OverdraftException : ArgumentOutOfRangeException
+{
 }
