@@ -8,10 +8,12 @@ public class StringCalculator
 {
 
     private readonly ILogger _logger;
+    private readonly IWebService _webService;
 
-    public StringCalculator(ILogger logger)
+    public StringCalculator(ILogger logger, IWebService webService)
     {
         _logger = logger;
+        _webService = webService;
     }
 
     public int Add(string numbers)
@@ -19,14 +21,22 @@ public class StringCalculator
         int total = numbers == "" ? 0 : numbers.Split(',', '\n')
                 .Select(int.Parse)
                 .Sum();
-        
+
         //WTCYWYH
-        _logger.Write(total.ToString());
+        try
+        {
+            _logger.Write(total.ToString());
+        }
+        catch (LoggingException)
+        {
+            _webService.LoggingFailed("Logging Failed");
+        }
+
         return total;
     }
 }
 
-public interface ILogger
+public interface IWebService
 {
-    void Write(string message);
+    void LoggingFailed(string failureMessage);
 }
