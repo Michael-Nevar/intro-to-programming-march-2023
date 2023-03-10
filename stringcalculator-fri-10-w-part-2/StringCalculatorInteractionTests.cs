@@ -41,7 +41,7 @@ public class StringCalculatorInteractionTests
         
         //Then
 
-        mockedWebService.Verify(w => w.LoggingFailed(expectedMessage));
+        mockedWebService.Verify(w => w.LoggingFailed(expectedMessage), Times.Once);
     }
 
     [Fact]
