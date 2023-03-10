@@ -22,20 +22,41 @@ public class StringCalculatorInteractionTests
         mockedLogger.Verify(m => m.Write(expected), Times.Once);
     }
 
-    [Fact]
-    public void WebServiceIsNotifedIfLoggerFails()
+    [Theory]
+    [InlineData("1", "Logging Failed")]
+    [InlineData("2", "Logging Failed")]
+    [InlineData("3", "Blamo")]
+    public void WebServiceIsNotifedIfLoggerFails(string numbers, string expectedMessage)
     {
         //Given
         var stubbedLogger = new Mock<ILogger>();
-        stubbedLogger.Setup(logger => logger.Write("1")).Throws<LoggingException>();
+        stubbedLogger.Setup(logger => logger.Write(It.IsAny<string>())).Throws<LoggingException>(() =>
+                new LoggingException(expectedMessage)
+        );
         var mockedWebService = new Mock<IWebService>();
         var calculator = new StringCalculator(stubbedLogger.Object, mockedWebService.Object);
 
         //When
-        calculator.Add("1");         
+        calculator.Add(numbers);         
         
         //Then
 
-        mockedWebService.Verify(w => w.LoggingFailed("Logging Failed"));
+        mockedWebService.Verify(w => w.LoggingFailed(expectedMessage));
     }
+
+    [Fact]
+    public void TheWebServiceIsNotCalledWhenNoLoggingException()
+    {
+        //Given
+        var stubbedLogger = new Mock<ILogger>();
+        var mockedWebService = new Mock<IWebService>();
+        var calculator = new StringCalculator(stubbedLogger.Object, mockedWebService.Object);
+
+        //When
+        calculator.Add("1");
+
+        //Then
+
+        mockedWebService.Verify(w => w.LoggingFailed(It.IsAny<string>()), Times.Never);
+    }
 }

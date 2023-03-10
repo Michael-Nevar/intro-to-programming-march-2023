@@ -27,11 +27,11 @@ public class StringCalculator
         {
             _logger.Write(total.ToString());
         }
-        catch (LoggingException)
+        catch (LoggingException ex)
         {
-            _webService.LoggingFailed("Logging Failed");
+            _webService.LoggingFailed(ex.Message);
         }
-
+        
         return total;
     }
 }
