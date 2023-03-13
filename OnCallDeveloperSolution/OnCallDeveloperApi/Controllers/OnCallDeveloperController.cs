@@ -16,6 +16,7 @@ public class OnCallDeveloperController : ControllerBase
     [HttpGet("/oncalldeveloper")]
     public ActionResult GetOnCallDeveloper()
     {
+        Thread.Sleep(1500); // dont do this
         GetOnCallDeveloperResponse response;
         if (_businessClock.IsDuringBusinessHours())
         {
