@@ -1,4 +1,5 @@
 ﻿
+
 namespace LearningResourcesApi.Controllers;
 
 public class LearningResourcesController : ControllerBase
@@ -11,12 +12,12 @@ public class LearningResourcesController : ControllerBase
     }
 
     [HttpGet("/learning-resources")]
-    public async Task<ActionResult> GetLearningResources()
+    public async Task<ActionResult<LearningResourcesResponse>> GetLearningResources()
     {
         var data = await _context.LearningResources
             .Where(item => item.WhenRemoved == null)
             .Select(item => new LearningResourceSummaryItem(
-            item.Id.ToString(), item.Name, item.Description, item.Link))
+                item.Id.ToString(), item.Name, item.Description, item.Link))
             .ToListAsync();
 
         var response = new LearningResourcesResponse(data);
