@@ -4,30 +4,32 @@ namespace OnCallDeveloperApi.Controllers;
 
 public class OnCallDeveloperController : ControllerBase
 {
-    private readonly IProvideTheBuisnessClock _businessClock;
+    private readonly IProvideTheBusinessClock _businessClock;
 
-    public OnCallDeveloperController(IProvideTheBuisnessClock businessClock)
+    public OnCallDeveloperController(IProvideTheBusinessClock businessClock)
     {
-        _businessClock = businessClock;
+        this._businessClock = businessClock;
     }
 
 
-    // GET /oncalldeveloper -> 200 OK
+    // GET /oncalldeveloper -> 200 Ok
     [HttpGet("/oncalldeveloper")]
+    [ResponseCache(Location=ResponseCacheLocation.Any, Duration = 30)]
     public ActionResult GetOnCallDeveloper()
     {
-        Thread.Sleep(1500); // dont do this
-        GetOnCallDeveloperResponse response;
-        if (_businessClock.IsDuringBusinessHours())
+      
+        GetOnCallDeveloperResponse response; 
+        // WTCYWYH
+        if(_businessClock.IsDuringBusinessHours())
         {
             response =
             new GetOnCallDeveloperResponse("Michael N.", "555-1212", "mike@aol.com");
-        }
-        else
+        } else
         {
             response =
             new GetOnCallDeveloperResponse("OnCallCorp Customer Service", "800 GOOD-LUCK", "oncall@company.com");
         }
+       
         return Ok(response); // 200 status code
     }
 }

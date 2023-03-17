@@ -1,5 +1,4 @@
 ﻿
-
 using Moq;
 using OnCallDeveloperApi.Controllers;
 
@@ -13,33 +12,41 @@ public class StandardBusinessClockTests
         var stubbedClock = new Mock<ISystemTime>();
         stubbedClock.Setup(clock => clock.GetCurrent()).Returns(
             new DateTime(1969, 4, 20, 09, 00, 00));
-        IProvideTheBuisnessClock clock = new StandardBusinessClock(stubbedClock.Object);
+        IProvideTheBusinessClock clock = new StandardBusinessClock(stubbedClock.Object);
 
         Assert.True(clock.IsDuringBusinessHours());
-
     }
 
     [Fact]
-    public void ReturnFalseBeforeBusinessHours()
+    public void ReturnsFalseBeforeBusinessHours()
     {
         var stubbedClock = new Mock<ISystemTime>();
         stubbedClock.Setup(clock => clock.GetCurrent()).Returns(
             new DateTime(1969, 4, 20, 08, 59, 59));
-        IProvideTheBuisnessClock clock = new StandardBusinessClock(stubbedClock.Object);
+        IProvideTheBusinessClock clock = new StandardBusinessClock(stubbedClock.Object);
 
         Assert.False(clock.IsDuringBusinessHours());
-
     }
-
     [Fact]
-    public void ReturnFalseAfterBusinessHours()
+    public void ReturnsFalseAfterBusinessHours()
     {
         var stubbedClock = new Mock<ISystemTime>();
         stubbedClock.Setup(clock => clock.GetCurrent()).Returns(
             new DateTime(1969, 4, 20, 16, 00, 00));
-        IProvideTheBuisnessClock clock = new StandardBusinessClock(stubbedClock.Object);
+        IProvideTheBusinessClock clock = new StandardBusinessClock(stubbedClock.Object);
 
         Assert.False(clock.IsDuringBusinessHours());
+    }
 
+    [Fact]
+    public void TestingAControllerSux()
+    {
+        var controller = new OnCallDeveloperController(new Mock<IProvideTheBusinessClock>().Object);
+
+        var response = controller.GetOnCallDeveloper();
+
+        // 30-50 lines of code just to find out if when I call GetOnCallDeveloper I get back the right data.
+
+         
     }
 }

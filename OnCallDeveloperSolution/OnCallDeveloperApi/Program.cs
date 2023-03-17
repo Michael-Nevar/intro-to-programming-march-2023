@@ -1,5 +1,4 @@
 
-
 using OnCallDeveloperApi;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,20 +12,19 @@ builder.Services.AddCors(options =>
     });
 });
 
+
 // Add services to the container.
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-builder.Services.AddSingleton<ISystemTime, SystemTime>(); 
-builder.Services.AddSingleton<IProvideTheBuisnessClock, StandardBusinessClock>();
+builder.Services.AddSingleton<ISystemTime, SystemTime>();
+builder.Services.AddSingleton<IProvideTheBusinessClock, StandardBusinessClock>();
 
 var app = builder.Build();
 
 app.UseCors();
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -37,7 +35,5 @@ if (app.Environment.IsDevelopment())
 app.UseAuthorization();
 
 app.MapControllers();
-
-// above runs before our api is up and running and listening to requests
-
+// here up runs BEFORE our API is up and running and listening for requests.
 app.Run();

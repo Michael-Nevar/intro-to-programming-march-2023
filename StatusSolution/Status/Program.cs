@@ -4,6 +4,16 @@ using Status;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(pol =>
+    {
+        pol.AllowAnyOrigin();
+        pol.AllowAnyHeader();
+        pol.AllowAnyMethod();
+    });
+});
+
 // we configure "services" - Entities, Values, Services
 var connectionString = "host=localhost;database=status_dev;username=postgres;password=TokyoJoe138!;port=5432";
 builder.Services.AddMarten(options =>
@@ -18,10 +28,13 @@ builder.Services.AddMarten(options =>
 
 var app = builder.Build();
 
+app.UseCors();
+
+// this can be called by anyone - allow anonymous
 app.MapGet("/status", async (IDocumentSession db) =>
 {
     var response = await db.Query<StatusMessage>()
-    .OrderByDescending(sm => sm.When)
+    .OrderByDescending(tacos => tacos.When)
     .FirstOrDefaultAsync();
 
     if (response == null)
@@ -35,6 +48,7 @@ app.MapGet("/status", async (IDocumentSession db) =>
     }
 });
 
+// we have to know who you are - "Authentication vs. Authorization"
 app.MapPost("/status", async (StatusChangeRequest request, IDocumentSession db) =>
 {
     // save this in the database 

@@ -15,14 +15,14 @@ public class OnCallDeveloperResourceTests
         // "Host" for our API our API will be up and running.
         await using var host = await AlbaHost.For<Program>(builder =>
         {
-            var stubbedBusinessClock = new Mock<IProvideTheBuisnessClock>();
+            var stubbedBusinessClock = new Mock<IProvideTheBusinessClock>();
             stubbedBusinessClock.Setup(clock => clock.IsDuringBusinessHours()).Returns(true);
 
             builder.ConfigureServices(services =>
             {
-                services.AddSingleton<IProvideTheBuisnessClock>(stubbedBusinessClock.Object);
+                services.AddSingleton<IProvideTheBusinessClock>(stubbedBusinessClock.Object);
             });
-        });
+        }); 
 
         // Scenarios  - 
         var response = await host.Scenario(api =>
@@ -32,15 +32,17 @@ public class OnCallDeveloperResourceTests
 
         });
 
-        var expectedResponse =
+        var expectedResponse = 
             new GetOnCallDeveloperResponse("Michael N.", "555-1212", "mike@aol.com");
 
-        var actualResponse = response.ReadAsJson<GetOnCallDeveloperResponse>();
+        var actualResponse =  response.ReadAsJson<GetOnCallDeveloperResponse>();
 
         Assert.NotNull(actualResponse);
 
         Assert.Equal(expectedResponse, actualResponse);
+        //Assert.Equal("Michael N.", actualResponse.Name);
 
+        
     }
     [Fact]
     public async Task CanGetOnCallDeveloperOutsideBusinessHours()
@@ -48,14 +50,15 @@ public class OnCallDeveloperResourceTests
         // "Host" for our API our API will be up and running.
         await using var host = await AlbaHost.For<Program>(builder =>
         {
-            var stubbedBusinessClock = new Mock<IProvideTheBuisnessClock>();
+            var stubbedBusinessClock = new Mock<IProvideTheBusinessClock>();
             stubbedBusinessClock.Setup(clock => clock.IsDuringBusinessHours()).Returns(false);
 
             builder.ConfigureServices(services =>
             {
-                services.AddSingleton<IProvideTheBuisnessClock>(stubbedBusinessClock.Object);
+                services.AddSingleton<IProvideTheBusinessClock>(stubbedBusinessClock.Object);
             });
         });
+
 
         // Scenarios  - 
         var response = await host.Scenario(api =>
